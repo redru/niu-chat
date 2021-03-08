@@ -38,13 +38,21 @@
     </md-app-drawer>
 
     <md-app-content>
-      <md-field>
-        <label>Send message to server</label>
-        <md-input type="text"
-                  v-model="messageInput"
-                  @keydown="sendToServer"></md-input>
-      </md-field>
       <p>{{message}}</p>
+
+      <div class="md-layout md-gutter md-alignment-center">
+        <div class="md-layout-item">
+          <md-field class="md-size-15">
+            <label>Send message to server</label>
+            <md-input type="text"
+                      v-model="messageInput"
+                      @keydown="sendToServer"></md-input>
+          </md-field>
+        </div>
+        <div class="md-layout-item">
+          <md-icon>send</md-icon>
+        </div>
+      </div>
     </md-app-content>
   </md-app>
 </div>
@@ -53,7 +61,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     const data = {
       messageInput: '',
-      message: ''
+      message: '-'
     }
 
     new Vue({
@@ -66,7 +74,7 @@
       }
     });
 
-    const sock = new SockJS('http://localhost:8080/live');
+    const sock = new SockJS('/live');
 
     sock.onopen = function() { };
 
