@@ -23,14 +23,37 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 
-		<!--<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>-->
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq</artifactId>
+			<version>3.14.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq-meta</artifactId>
+			<version>3.14.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq-codegen</artifactId>
+			<version>3.14.8</version>
+		</dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -65,6 +88,48 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-codegen-maven</artifactId>
+				<version>3.14.8</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>8.0.23</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<jdbc>
+						<driver>com.mysql.cj.jdbc.Driver</driver>
+						<url>jdbc:mysql://localhost:3306/chat</url>
+						<user>root</user>
+						<password>root</password>
+					</jdbc>
+					<generator>
+						<generate>
+							<pojos>true</pojos>
+							<pojosEqualsAndHashCode>true</pojosEqualsAndHashCode>
+						</generate>
+						<database>
+							<name>org.jooq.meta.mysql.MySQLDatabase</name>
+							<includes>.*</includes>
+							<inputSchema>chat</inputSchema>
+						</database>
+						<target>
+							<packageName>io.zen.niu.chat.domain</packageName>
+							<directory>target/generated-sources/jooq</directory>
+						</target>
+					</generator>
 				</configuration>
 			</plugin>
 		</plugins>

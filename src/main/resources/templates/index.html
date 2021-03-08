@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<template th:replace="commons :: header"></template>
+<body>
+
+<div id="app">
+  <md-app style="min-height: 100vh;">
+    <md-app-toolbar class="md-primary">
+      <span class="md-title">Niu Chat</span>
+    </md-app-toolbar>
+
+    <md-app-drawer md-permanent="full">
+      <md-toolbar class="md-transparent" md-elevation="0">
+        Menu
+      </md-toolbar>
+
+      <md-list>
+        <md-list-item>
+          <md-icon>move_to_inbox</md-icon>
+          <span class="md-list-item-text">Inbox</span>
+        </md-list-item>
+
+        <md-list-item>
+          <md-icon>send</md-icon>
+          <span class="md-list-item-text">Sent Mail</span>
+        </md-list-item>
+
+        <md-list-item>
+          <md-icon>delete</md-icon>
+          <span class="md-list-item-text">Trash</span>
+        </md-list-item>
+
+        <md-list-item>
+          <md-icon>error</md-icon>
+          <span class="md-list-item-text">Spam</span>
+        </md-list-item>
+      </md-list>
+    </md-app-drawer>
+
+    <md-app-content>
+      <md-field>
+        <label>Send message to server</label>
+        <md-input type="text"
+                  v-model="messageInput"
+                  @keydown="sendToServer"></md-input>
+      </md-field>
+      <p>{{message}}</p>
+    </md-app-content>
+  </md-app>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const data = {
+      messageInput: '',
+      message: ''
+    }
+
+    new Vue({
+      el: '#app',
+      data: data,
+      methods: {
+        sendToServer: function() {
+          sock.send(`{ "name": "${data.messageInput}" }`);
+        }
+      }
+    });
+
+    const sock = new SockJS('http://localhost:8080/live');
+
+    sock.onopen = function() { };
+
+    sock.onmessage = function(e) {
+      data.message = e.data;
+    };
+
+    sock.onclose = function() {
+      console.log('close');
+    };
+  }, false);
+</script>
+
+<template th:replace="commons :: after-imports"></template>
+
+</body>
+</html>
