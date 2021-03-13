@@ -2,6 +2,7 @@ package io.zen.niu.chat.live;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,13 +23,15 @@ public class LiveSocketHandler extends TextWebSocketHandler {
 
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws IOException {
-    if (session.getPrincipal() == null) {
+    final Principal principal = session.getPrincipal();
+
+    if (principal == null) {
       session.close();
       return;
     }
 
-    LOGGER.info("User {} connected to websocket", session.getPrincipal().getName());
-    sessions.put(session.getPrincipal().getName(), session);
+    LOGGER.info("User {} connected to websocket", principal.getName());
+    sessions.put(principal.getName(), session);
   }
 
   @Override

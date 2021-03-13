@@ -1,5 +1,11 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/chat
+    url: jdbc:mysql://localhost:3306/niiu
     username: root
     password: root
+
+springdoc:
+  api-docs:
+    path: /admin/api-docs
+  swagger-ui:
+    path: /admin/api-docs-ui

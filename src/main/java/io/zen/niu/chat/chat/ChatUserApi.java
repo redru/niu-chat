@@ -1,9 +1,9 @@
 package io.zen.niu.chat.chat;
 
-import static io.zen.niu.chat.domain.Tables.MESSAGES;
+import static io.zen.niu.domain.Tables.MESSAGES;
 
-import io.zen.niu.chat.domain.tables.pojos.Messages;
-import io.zen.niu.chat.domain.tables.records.MessagesRecord;
+import io.zen.niu.domain.tables.pojos.Messages;
+import io.zen.niu.domain.tables.records.MessagesRecord;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -16,7 +16,7 @@ import org.jooq.DSLContext;
 import org.jooq.InsertSetStep;
 import org.jooq.InsertValuesStepN;
 import org.jooq.SelectLimitPercentAfterOffsetStep;
-import org.jooq.SelectOrderByStep;
+import org.jooq.types.UInteger;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,20 +42,12 @@ public class ChatUserApi {
   ) {
     List<Messages> result = dslContext.transactionResult(configuration -> {
       SelectLimitPercentAfterOffsetStep<MessagesRecord> selectFrom = dslContext.selectFrom(MESSAGES)
-          .where(MESSAGES.FROM.eq(userId))
+          .where(MESSAGES.USER_ID.eq(UInteger.valueOf(userId)))
           .orderBy(MESSAGES.TIMESTAMP.desc())
           .offset(page * 10)
           .limit(10);
 
-      SelectLimitPercentAfterOffsetStep<MessagesRecord> selectTo = dslContext.selectFrom(MESSAGES)
-          .where(MESSAGES.TO.eq(1L))
-          .orderBy(MESSAGES.TIMESTAMP.desc())
-          .offset(page * 10)
-          .limit(10);
-
-      SelectOrderByStep<MessagesRecord> union = selectFrom.unionAll(selectTo);
-
-      return union.fetchInto(Messages.class);
+      return selectFrom.fetchInto(Messages.class);
     });
 
     return result.stream()
