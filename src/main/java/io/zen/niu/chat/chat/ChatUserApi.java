@@ -18,6 +18,7 @@ import org.jooq.InsertValuesStepN;
 import org.jooq.SelectLimitPercentAfterOffsetStep;
 import org.jooq.types.UInteger;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,22 +36,19 @@ public class ChatUserApi {
     this.dslContext = dslContext;
   }
 
+  @Transactional
   @GetMapping(path = "/v2/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public List<Messages> getChatUsersV2(
       @PathVariable Long userId,
       @RequestParam(name = "page", required = false, defaultValue = "0") Integer page
   ) {
-    List<Messages> result = dslContext.transactionResult(configuration -> {
-      SelectLimitPercentAfterOffsetStep<MessagesRecord> selectFrom = dslContext.selectFrom(MESSAGES)
-          .where(MESSAGES.USER_ID.eq(UInteger.valueOf(userId)))
-          .orderBy(MESSAGES.TIMESTAMP.desc())
-          .offset(page * 10)
-          .limit(10);
+    SelectLimitPercentAfterOffsetStep<MessagesRecord> selectFrom = dslContext.selectFrom(MESSAGES)
+        .where(MESSAGES.USER_ID.eq(UInteger.valueOf(userId)))
+        .orderBy(MESSAGES.TIMESTAMP.desc())
+        .offset(page * 10)
+        .limit(10);
 
-      return selectFrom.fetchInto(Messages.class);
-    });
-
-    return result.stream()
+    return selectFrom.fetchInto(Messages.class).stream()
         .sorted(Comparator.comparing(Messages::getTimestamp).reversed())
         .collect(Collectors.toList());
   }
