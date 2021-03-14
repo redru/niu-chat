@@ -5,9 +5,9 @@ import static io.zen.niu.domain.tables.Users.USERS;
 import io.zen.niu.domain.tables.pojos.Users;
 import java.util.Optional;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
+@Repository
 public class UserDao {
 
   private final DSLContext dslContext;

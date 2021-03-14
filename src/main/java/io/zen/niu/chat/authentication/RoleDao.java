@@ -6,9 +6,9 @@ import static io.zen.niu.domain.tables.UsersRoles.USERS_ROLES;
 import java.util.List;
 import org.jooq.DSLContext;
 import org.jooq.types.UInteger;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
+@Repository
 public class RoleDao {
 
   private final DSLContext dslContext;
