@@ -13,23 +13,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class NiiuUserDetailsService implements UserDetailsService {
 
-  private final UserDao userDao;
-  private final RoleDao roleDao;
+  private final UserRepository userRepository;
+  private final RoleRepository roleRepository;
 
   public NiiuUserDetailsService(
-      UserDao userDao,
-      RoleDao roleDao
+      UserRepository userRepository,
+      RoleRepository roleRepository
   ) {
-    this.userDao = userDao;
-    this.roleDao = roleDao;
+    this.userRepository = userRepository;
+    this.roleRepository = roleRepository;
   }
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    Users user = userDao.getUser(username)
+    Users user = userRepository.getUser(username)
         .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found"));
 
-    Set<GrantedAuthority> roles = roleDao.getRoles(user.getId())
+    Set<GrantedAuthority> roles = roleRepository.getRoles(user.getId())
         .stream()
         .map(SimpleGrantedAuthority::new)
         .collect(Collectors.toSet());
@@ -37,7 +37,7 @@ public class NiiuUserDetailsService implements UserDetailsService {
     return new NiiuUser(
         user.getUsername(),
         user.getPassword(),
-        "ACTIVE".equals(user.getStatus()),
+        UsersStatus.ACTIVE.toString().equals(user.getStatus()),
         true,
         true,
         true,

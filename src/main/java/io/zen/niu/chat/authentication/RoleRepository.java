@@ -9,11 +9,11 @@ import org.jooq.types.UInteger;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RoleDao {
+public class RoleRepository {
 
   private final DSLContext dslContext;
 
-  public RoleDao(DSLContext dslContext) {
+  public RoleRepository(DSLContext dslContext) {
     this.dslContext = dslContext;
   }
 

@@ -8,11 +8,11 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserDao {
+public class UserRepository {
 
   private final DSLContext dslContext;
 
-  public UserDao(DSLContext dslContext) {
+  public UserRepository(DSLContext dslContext) {
     this.dslContext = dslContext;
   }
 
