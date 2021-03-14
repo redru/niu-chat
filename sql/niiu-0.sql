@@ -24,7 +24,7 @@ create or replace table users(id int unsigned primary key auto_increment,
                               password varchar(60),
                               email varchar(100) unique,
                               status varchar(20) default 'ACTIVE',
-                              create_date datetime,
+                              create_date datetime default now(),
                               update_date datetime,
                               foreign key (status) references user_status(id)
                                   on update cascade
@@ -36,7 +36,7 @@ create or replace index users_email_status on users(email, status);
 -- roles
 
 create or replace table roles(
-    value varchar(20) primary key
+    id varchar(20) primary key
 );
 
 insert into roles values
@@ -47,9 +47,18 @@ insert into roles values
 -- user roles
 
 create or replace table users_roles(user_id int unsigned,
-                                    role_id int,
+                                    role_id varchar(20),
                                     primary key (user_id, role_id)
 );
+
+alter table users_roles
+    add foreign key (user_id) references users(id)
+        on update cascade
+        on delete cascade,
+    add foreign key (role_id) references roles(id)
+        on update cascade
+        on delete cascade
+;
 
 -- chats
 
