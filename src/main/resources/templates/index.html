@@ -41,17 +41,18 @@
       <p>{{message}}</p>
 
       <div class="md-layout md-gutter md-alignment-center">
-        <div class="md-layout-item">
-          <md-field class="md-size-15">
-            <label>Send message to server</label>
-            <md-input type="text"
-                      v-model="messageInput"
-                      @keydown="sendToServer"></md-input>
-          </md-field>
-        </div>
-        <div class="md-layout-item">
-          <md-icon>send</md-icon>
-        </div>
+        <form novalidate class="md-layout" @submit.prevent="sendMessage">
+          <div class="md-layout-item">
+            <md-field class="md-size-15">
+              <label>Send message to server</label>
+              <md-input type="text"
+                        v-model="messageInput"></md-input>
+            </md-field>
+          </div>
+          <div class="md-layout-item">
+            <md-icon>send</md-icon>
+          </div>
+        </form>
       </div>
     </md-app-content>
   </md-app>
@@ -69,7 +70,14 @@
       data: data,
       methods: {
         sendToServer: function() {
-          sock.send(`{ "name": "${data.messageInput}" }`);
+          sock.send('\1{ "to": "admin", "message": "Hi!!", "dateTime": "2021-03-15T22:03:00" }');
+        },
+        sendMessage: function() {
+          axios.post('/api/chat/message', {
+            groupId: '123456',
+            hasAttachment: 0,
+            message: data.messageInput
+          });
         }
       }
     });

@@ -79,7 +79,7 @@ create or replace table messages(id varchar(36) primary key,
                                  user_id int unsigned,
                                  has_attachment boolean default false,
                                  message text default '',
-                                 timestamp int unsigned,
+                                 timestamp bigint,
                                  create_date datetime
 );
 

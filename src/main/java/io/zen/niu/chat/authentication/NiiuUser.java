@@ -1,8 +1,10 @@
 package io.zen.niu.chat.authentication;
 
 import io.zen.niu.domain.tables.pojos.Users;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Objects;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -34,6 +36,10 @@ public class NiiuUser extends User {
     this.user = user;
   }
 
+  public static NiiuUser from(Principal principal) {
+    return ((NiiuUser) ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -52,6 +58,10 @@ public class NiiuUser extends User {
   @Override
   public int hashCode() {
     return Objects.hash(super.hashCode(), user);
+  }
+
+  public Users getUser() {
+    return user;
   }
 
 }

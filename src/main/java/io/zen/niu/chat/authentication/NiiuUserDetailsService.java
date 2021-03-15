@@ -34,9 +34,13 @@ public class NiiuUserDetailsService implements UserDetailsService {
         .map(SimpleGrantedAuthority::new)
         .collect(Collectors.toSet());
 
+    String password = user.getPassword();
+
+    user.setPassword(null);
+
     return new NiiuUser(
         user.getUsername(),
-        user.getPassword(),
+        password,
         UsersStatus.ACTIVE.toString().equals(user.getStatus()),
         true,
         true,
